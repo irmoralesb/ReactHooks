@@ -4,7 +4,7 @@ export default function AppMenu() {
       window.location.href = route;
     },
   };
-  const { toggleTheme } = { toggleTheme: () => {} };
+  const { toggleTheme } = { toggleTheme: () => { } };
 
   return (
     <header className="d-flex justify-content-center py-3">
