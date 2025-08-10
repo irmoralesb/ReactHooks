@@ -5,7 +5,6 @@ import SpeakersModalFooter from "./SpeakerModalFooter";
 import { SpeakerModalContext } from "../contexts/SpeakerModalContext";
 
 export default function SpeakerModal() {
-
   const { modalShow } = useContext(SpeakerModalContext);
 
   const cssShowHide =
@@ -42,7 +41,9 @@ export default function SpeakerModal() {
         <div className="modal-dialog modal-dialog-centered">
           <div
             className="modal-content border-0"
-            style={{ backgroundColor: "#EEEEEE" }}
+            style={{
+              backgroundColor: "#EEEEEE",
+            }}
           >
             <SpeakersModalHeader />
             <SpeakersModalBody />

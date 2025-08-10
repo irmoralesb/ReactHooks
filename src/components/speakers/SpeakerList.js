@@ -1,7 +1,14 @@
 import SpeakerLine from "./SpeakerLine";
-import { useState, useEffect, useReducer, useContext, useCallback, useTransition } from 'react'
-import axios from 'axios';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+  useTransition,
+} from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
+import axios from "axios";
 
 function List({ state, dispatch }) {
   const [updatingId, setUpdatingId] = useState(0);
@@ -11,8 +18,14 @@ function List({ state, dispatch }) {
   const speakers = state.speakers;
 
   function toggleFavoriteSpeaker(speakerRec) {
-    const speakerRecUpdated = { ...speakerRec, favorite: !speakerRec.favorite };
-    dispatch({ type: 'updateSpeaker', speaker: speakerRecUpdated });
+    const speakerRecUpdated = {
+      ...speakerRec,
+      favorite: !speakerRec.favorite,
+    };
+    dispatch({
+      type: "updateSpeaker",
+      speaker: speakerRecUpdated,
+    });
     async function updateAsync(rec) {
       setUpdatingId(rec.id);
       await axios.put(`/api/speakers/${rec.id}`, speakerRecUpdated);
@@ -37,7 +50,7 @@ function List({ state, dispatch }) {
                   setSearchName(event.target.value);
                   startTransition(() => {
                     setHighlightChars(event.target.value);
-                  })
+                  });
                 }}
                 type="text"
                 className="form-control"
@@ -57,23 +70,21 @@ function List({ state, dispatch }) {
         {speakers.map(function (speakerRec) {
           const highlight =
             highlightChars?.length > 0 &&
-              (
-                speakerRec.firstName?.toLowerCase() +
-                speakerRec.lastName?.toLowerCase()
-              ).includes(highlightChars.toLowerCase())
-              ? true : false;
+            (
+              speakerRec.firstName?.toLowerCase() +
+              speakerRec.lastName?.toLowerCase()
+            ).includes(highlightChars.toLowerCase())
+              ? true
+              : false;
           return (
             <SpeakerLine
               key={speakerRec.id}
               speakerRec={speakerRec}
               updating={updatingId === speakerRec.id ? updatingId : 0}
-              toggleFavoriteSpeaker={
-                //We need to use callback to make memo work, since the function was not the same everytime 
-                // and this makes the line rerender.
-                useCallback(
-                  () => toggleFavoriteSpeaker(speakerRec),
-                  [speakerRec.favorite])
-              }
+              toggleFavoriteSpeaker={useCallback(
+                () => toggleFavoriteSpeaker(speakerRec),
+                [speakerRec.favorite],
+              )}
               highlight={highlight}
             />
           );
@@ -89,42 +100,58 @@ const SpeakerList = () => {
   function reducer(state, action) {
     switch (action.type) {
       case "speakersLoaded":
-        //return { ...state, loading: false, speakers: action.speakers };
-        return { ...state, loading: false, speakers: [...action.speakers, ...createDummySpeakers(8000)] };
+        return {
+          ...state,
+          loading: false,
+          speakers: [...action.speakers, ...createDummySpeakers(8000)],
+        };
       case "setLoadingStatus":
-        return { ...state, loading: true };
+        return {
+          ...state,
+          loading: true,
+        };
       case "updateSpeaker":
-        const speakersUpdated = state.speakers.map((rec) => action.speaker.id === rec.id ? action.speaker : rec);
-        return { ...state, speakers: speakersUpdated };
+        const speakersUpdated = state.speakers.map((rec) =>
+          action.speaker.id === rec.id ? action.speaker : rec,
+        );
+        return {
+          ...state,
+          speakers: speakersUpdated,
+        };
       default:
-        throw new Error(`case failure. type: ${action.type}`);
+        throw new Error(`case failure.  type: ${action.type}`);
     }
   }
 
   const initialState = {
     speakers: [],
-    loading: true
+    loading: true,
+    updateItem: () => {},
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     async function getDataAsync() {
-      dispatch({ type: 'setLoadingStatus' });
+      dispatch({
+        type: "setLoadingStatus",
+      });
       const results = await axios.get("/api/speakers");
-      dispatch({ type: 'speakersLoaded', speakers: results.data });
+      dispatch({
+        type: "speakersLoaded",
+        speakers: results.data,
+      });
     }
     getDataAsync();
   }, []);
 
-
-  function updateSpeaker(speackerRec) {
+  function updateSpeaker(speakerRec) {
     const speakerUpdated = speakers.map(function (rec) {
-      return speackerRec.id == rec.id ? speackerRec : rec
+      return speakerRec.id === rec.id ? speakerRec : rec;
     });
     setSpeakers(speakerUpdated);
   }
 
-  if (state.loading) return <div>Loading...</div>
+  if (state.loading) return <div>Loading...</div>;
 
   return (
     <div className={darkTheme ? "theme-dark" : "theme-light"}>

@@ -1,11 +1,17 @@
-import SpeakerDetail from "./SpeakerDetail";
-import { ThemeContext } from "../contexts/ThemeContext";
 import { useContext } from "react";
-import { SpeakersDataContext, SpeakersDataProvider } from "../contexts/SpeakersDataContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import SpeakerDetail from "./SpeakerDetail";
+import {
+  SpeakersDataContext,
+  SpeakersDataProvider,
+} from "../contexts/SpeakersDataContext";
 
 function Inner({ id }) {
   const { darkTheme } = useContext(ThemeContext);
-  const { speakerList } = useContext(SpeakersDataContext);
+  const { speakerList, loadingStatus } = useContext(SpeakersDataContext);
+
+  if (loadingStatus === "loading") return <div>Loading...</div>;
+
   const speakerRec = speakerList?.find((rec) => rec.id === id);
 
   return speakerRec ? (
@@ -17,11 +23,10 @@ function Inner({ id }) {
   );
 }
 
-
 export default function Speaker(props) {
   return (
     <SpeakersDataProvider>
       <Inner {...props} />
     </SpeakersDataProvider>
-  )
+  );
 }

@@ -1,15 +1,10 @@
-import { memo } from 'react';
+import { memo } from "react";
 import FavoriteSpeakerToggleLine from "./FavoriteSpeakerToggleLine";
 import SpeakerImageToggleOnScroll from "./SpeakerImageToggleOnScroll";
 
 const SpeakerLine = memo(
-  ({
-    speakerRec,
-    toggleFavoriteSpeaker,
-    updating,
-    highlight,
-  }) => {
-    console.log(`Speaker line: speaker: ${speakerRec.lastName}`);
+  ({ speakerRec, toggleFavoriteSpeaker, updating, highlight }) => {
+    console.log(`SpeakerLine: speaker: ${speakerRec.lastName}`);
     return (
       <div className="col-xl-12 col-md-12">
         <div className="card border-0 speaker-list">
@@ -44,7 +39,10 @@ const SpeakerLine = memo(
                         toggleFavoriteSpeaker={toggleFavoriteSpeaker}
                       >
                         {updating ? (
-                          <i className="spinner-border text-dark" role="status" />
+                          <i
+                            className="spinner-border text-dark"
+                            role="status"
+                          />
                         ) : null}
                       </FavoriteSpeakerToggleLine>
                     </div>
@@ -59,6 +57,7 @@ const SpeakerLine = memo(
         </div>
       </div>
     );
-  });
+  },
+);
 
 export default SpeakerLine;

@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useContext } from 'react';
-import { SpeakerMenuContext } from '../contexts/SpeakerMenuContext';
+import { useContext, useEffect, useRef, useState } from "react";
+import { SpeakerMenuContext } from "../contexts/SpeakerMenuContext";
 
 export default function SpeakerImageToggleOnScroll({
   imageUrl,
@@ -9,7 +9,8 @@ export default function SpeakerImageToggleOnScroll({
   const [inView, setInView] = useState(false);
   const imageRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { speakingSaturday, speakingSunday, searchText } = useContext(SpeakerMenuContext);
+  const { speakingSaturday, speakingSunday, searchText } =
+    useContext(SpeakerMenuContext);
 
   function scrollHandler() {
     setInView(isInView());
@@ -21,15 +22,13 @@ export default function SpeakerImageToggleOnScroll({
     window.addEventListener("scroll", scrollHandler);
     return () => {
       window.removeEventListener("scroll", scrollHandler);
-    }
+    };
   }, [speakingSaturday, speakingSunday, searchText]);
-
 
   function isInView() {
     const rect = imageRef.current.getBoundingClientRect();
     return rect.top >= 0 && rect.bottom <= window.innerHeight;
   }
-
 
   const grayScale = inView ? "grayscale(0%)" : "grayscale(100%)";
   const gif1x1Transparent =
@@ -46,7 +45,9 @@ export default function SpeakerImageToggleOnScroll({
           ? "img-fluid rounded-start "
           : "img-fluid rounded-start speaker-image"
       }
-      style={{ filter: `${grayScale}` }}
+      style={{
+        filter: `${grayScale}`,
+      }}
       ref={imageRef}
     />
   );

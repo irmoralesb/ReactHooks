@@ -20,9 +20,21 @@ export default function AppMenu() {
               }}
               className="nav-link"
             >
+              Home
+            </button>
+          </li>
+
+          <li className="nav-item">
+            <button
+              onClick={() => {
+                setRoute("/speakers");
+              }}
+              className="nav-link"
+            >
               Speakers
             </button>
           </li>
+
           <li className="nav-item">
             <button
               onClick={() => {

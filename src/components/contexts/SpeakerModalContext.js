@@ -3,15 +3,15 @@ import useSpeakerModal from "../hooks/useSpeakerModal";
 
 export const SpeakerModalContext = createContext({
   modalShow: false,
-  setModalShow: () => { },
+  setModalShow: () => {},
   modalSpeakerId: 0,
-  setModalSpeakerId: () => { },
+  setModalSpeakerId: () => {},
   modalSpeakerFirstName: "",
-  setModalSpeakerFirstName: () => { },
+  setModalSpeakerFirstName: () => {},
   modalSpeakerLastName: "",
-  setModalSpeakerLastName: () => { },
+  setModalSpeakerLastName: () => {},
   modalSpeakerImageUrl: "",
-  setModalSpeakerImageUrl: () => { },
+  setModalSpeakerImageUrl: () => {},
 });
 
 export const SpeakerModalProvider = ({ children }) => {
