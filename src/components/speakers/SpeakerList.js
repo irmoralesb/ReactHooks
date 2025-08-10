@@ -1,10 +1,12 @@
 import SpeakerLine from "./SpeakerLine";
-import { useState, useEffect, useReducer, useContext, useCallback } from 'react'
+import { useState, useEffect, useReducer, useContext, useCallback, useDeferredValue } from 'react'
 import axios from 'axios';
 import { ThemeContext } from "../contexts/ThemeContext";
 
 function List({ state, dispatch }) {
-  const [updatingId, setUpdatingId] = useState(0);//1269
+  const [updatingId, setUpdatingId] = useState(0);
+  const [searchName, setSearchName] = useState("");
+  const hightlightChars = useDeferredValue(searchName);
   const isPending = false;
   const speakers = state.speakers;
 
@@ -30,8 +32,10 @@ function List({ state, dispatch }) {
           <div className="toolbar-trigger mb-3 flex-grow-04">
             <div className="toolbar-search w-100">
               <input
-                value=""
-                onChange={(event) => { }}
+                value={searchName}
+                onChange={(event) => {
+                  setSearchName(event.target.value);
+                }}
                 type="text"
                 className="form-control"
                 placeholder="Highlight Names"
@@ -48,7 +52,13 @@ function List({ state, dispatch }) {
 
       <div className="row g-3">
         {speakers.map(function (speakerRec) {
-          const highlight = false;
+          const highlight =
+            hightlightChars?.length > 0 &&
+              (
+                speakerRec.firstName?.toLowerCase() +
+                speakerRec.lastName?.toLowerCase()
+              ).includes(hightlightChars.toLowerCase())
+              ? true : false;
           return (
             <SpeakerLine
               key={speakerRec.id}
@@ -76,7 +86,8 @@ const SpeakerList = () => {
   function reducer(state, action) {
     switch (action.type) {
       case "speakersLoaded":
-        return { ...state, loading: false, speakers: action.speakers };
+        //return { ...state, loading: false, speakers: action.speakers };
+        return { ...state, loading: false, speakers: [...action.speakers, ...createDummySpeakers(8000)] };
       case "setLoadingStatus":
         return { ...state, loading: true };
       case "updateSpeaker":
@@ -120,3 +131,22 @@ const SpeakerList = () => {
 };
 
 export default SpeakerList;
+
+function createDummySpeakers(numToAdd) {
+  let speakers = [];
+  for (let increment = 1; increment < numToAdd; increment++) {
+    speakers.push({
+      id: 100000 + increment,
+      firstName: `Craig${increment}`,
+      lastName: `Mantle${increment}`,
+      favorite: false,
+      bio: "fake bio",
+      company: "fake company",
+      twitterHandle: `fakeTwitterHandle${increment}`,
+      userBioShort: `fake short bio ${increment}`,
+      imageUrl: "",
+      email: `FakeEmail${increment}@codecamp.net`,
+    });
+  }
+  return speakers;
+}
