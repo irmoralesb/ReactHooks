@@ -1,5 +1,5 @@
 import SpeakerLine from "./SpeakerLine";
-import { useState, useEffect, useReducer, useContext } from 'react'
+import { useState, useEffect, useReducer, useContext, useCallback } from 'react'
 import axios from 'axios';
 import { ThemeContext } from "../contexts/ThemeContext";
 
@@ -54,7 +54,13 @@ function List({ state, dispatch }) {
               key={speakerRec.id}
               speakerRec={speakerRec}
               updating={updatingId === speakerRec.id ? updatingId : 0}
-              toggleFavoriteSpeaker={() => toggleFavoriteSpeaker(speakerRec)}
+              toggleFavoriteSpeaker={
+                //We need to use callback to make memo work, since the function was not the same everytime 
+                // and this makes the line rerender.
+                useCallback(
+                  () => toggleFavoriteSpeaker(speakerRec),
+                  [speakerRec.favorite])
+              }
               highlight={highlight}
             />
           );
