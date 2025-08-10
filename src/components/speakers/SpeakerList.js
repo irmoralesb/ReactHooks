@@ -1,7 +1,7 @@
 import SpeakerLine from "./SpeakerLine";
 import { useState, useEffect, useReducer, useContext } from 'react'
 import axios from 'axios';
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 function List({ state, dispatch }) {
   const [updatingId, setUpdatingId] = useState(0);//1269
@@ -15,8 +15,7 @@ function List({ state, dispatch }) {
       setUpdatingId(rec.id);
       await axios.put(`/api/speakers/${rec.id}`, speakerRecUpdated);
       setUpdatingId(0);
-    };
-
+    }
     updateAsync(speakerRecUpdated);
   }
 
@@ -86,7 +85,6 @@ const SpeakerList = () => {
     speakers: [],
     loading: true
   };
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
