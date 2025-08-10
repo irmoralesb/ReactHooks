@@ -5,7 +5,7 @@ import { SpeakersDataContext, SpeakersDataProvider } from "../contexts/SpeakersD
 
 function Inner({ id }) {
   const { darkTheme } = useContext(ThemeContext);
-  const { speakerList } = useContext(SpeakerDataContext);
+  const { speakerList } = useContext(SpeakersDataContext);
   const speakerRec = speakerList?.find((rec) => rec.id === id);
 
   return speakerRec ? (
