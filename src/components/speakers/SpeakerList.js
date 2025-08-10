@@ -1,13 +1,13 @@
 import SpeakerLine from "./SpeakerLine";
-import { useState, useEffect, useReducer, useContext, useCallback, useDeferredValue } from 'react'
+import { useState, useEffect, useReducer, useContext, useCallback, useTransition } from 'react'
 import axios from 'axios';
 import { ThemeContext } from "../contexts/ThemeContext";
 
 function List({ state, dispatch }) {
   const [updatingId, setUpdatingId] = useState(0);
   const [searchName, setSearchName] = useState("");
-  const hightlightChars = useDeferredValue(searchName);
-  const isPending = false;
+  const [highlightChars, setHighlightChars] = useState();
+  const [isPending, startTransition] = useTransition();
   const speakers = state.speakers;
 
   function toggleFavoriteSpeaker(speakerRec) {
@@ -35,6 +35,9 @@ function List({ state, dispatch }) {
                 value={searchName}
                 onChange={(event) => {
                   setSearchName(event.target.value);
+                  startTransition(() => {
+                    setHighlightChars(event.target.value);
+                  })
                 }}
                 type="text"
                 className="form-control"
@@ -53,11 +56,11 @@ function List({ state, dispatch }) {
       <div className="row g-3">
         {speakers.map(function (speakerRec) {
           const highlight =
-            hightlightChars?.length > 0 &&
+            highlightChars?.length > 0 &&
               (
                 speakerRec.firstName?.toLowerCase() +
                 speakerRec.lastName?.toLowerCase()
-              ).includes(hightlightChars.toLowerCase())
+              ).includes(highlightChars.toLowerCase())
               ? true : false;
           return (
             <SpeakerLine
